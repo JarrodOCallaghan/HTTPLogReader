@@ -66,16 +66,4 @@ public class LogEntryTest {
 
     }
 
-    // Test we parse the correct line data
-
-
-    // Test we parse the correct line data
-
-    // Test we parse the wrong format
-
-    // Test line is null
-    
-    // Test line is too long?
-
-    //
 }
