@@ -97,6 +97,8 @@ public class LogEntry{
 	public void parseLogData(String data){
 		setRaw(data);
 
+		// Could raise an exception here but I think its better to catch it one level up.
+		// If Log entry throws exception, it would be due to a incorrect log file and the file parser should catch it
 		// Splitting first few log headers by spaces
 		String splitData[] = data.split(" ", 4);
 		setIP(splitData[0]);
