@@ -8,9 +8,14 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args){
+        if (args.length == 0){
+            System.out.println("No filepath provided");
+            System.exit(0);
+        }
 
         // Process file and get log entries
-        String filePath = "/Users/jarrod/Repositories/HTTPLogReader/SampleData/data.log";
+        String filePath = args[0];
+        // String filePath = "/Users/jarrod/Repositories/HTTPLogReader/SampleData/data.log";
         FileReader fr = new FileReader();
         fr.readFile(filePath);
 
@@ -18,7 +23,14 @@ public class App {
         report(fr);
     }
 
-    static public void report(FileReader fr){
+    
+    public static void printMenu(){
+        System.out.println("HTTP Log Reader");
+        System.out.println("Please provide a filepath");
+    }
+
+
+    public static void report(FileReader fr){
         System.out.println("Number of unique IP addresses: " + getUniqueIPCount(fr.getIPAddresses()));
         System.out.println(getTop3IpAddresses(fr.getIPAddresses()));
         System.out.println(getTop3URLAccessed(fr.getUrlAddresses()));

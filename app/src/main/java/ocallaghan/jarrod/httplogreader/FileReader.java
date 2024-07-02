@@ -11,8 +11,8 @@ public class FileReader {
     private Map<String, Integer> urlAddresses = new HashMap<String, Integer>(); 
 
     public void readFile(String filePath){
+        File file = new File(filePath);
         try {
-            File file = new File(filePath);
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String data = scanner.nextLine();
@@ -38,6 +38,7 @@ public class FileReader {
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            System.out.println(file.getAbsolutePath());
             System.exit(0);
         } catch (ArrayIndexOutOfBoundsException e){
             System.out.println("Unable to parse file, it may not be the correct format");

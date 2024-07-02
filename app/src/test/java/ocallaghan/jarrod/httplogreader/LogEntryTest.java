@@ -63,7 +63,6 @@ public class LogEntryTest {
             incorrectLog.parseLogData("INCORRECTSTRING");
         });
 
-
     }
 
 }
