@@ -17,7 +17,24 @@ https://en.wikipedia.org/wiki/Common_Log_Format
 
 This project is using Gradle as its build tool
 
+## Building
 
+The project was build using Gradle.
+The Gradle install documentation can be found here: https://gradle.org/install/
+Once gradle is installed on your machine, navigate to the project folder and run:
+
+```
+gradle run
+```
+
+The project is going to output that a filepath was not provided. This referrs to the filepath which this app will ingest.
+It can take a relative filepath or a absolute filepath. However, if you are using a relative path, be aware that Gradle will run the app in the /app folder, so the filepath provided may need to be amended.
+
+An example of running then app against a file:
+
+```
+gradle run --args=~/TestFile.txt
+```
 
 
 ## Versioning
