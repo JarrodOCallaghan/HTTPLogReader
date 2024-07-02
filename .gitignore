@@ -33,3 +33,5 @@ SampleData/
 build
 
 .vscode/
+
+.DS_Store

@@ -1,16 +1,9 @@
 package ocallaghan.jarrod.httplogreader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
-import java.util.Scanner;
+
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class App {
