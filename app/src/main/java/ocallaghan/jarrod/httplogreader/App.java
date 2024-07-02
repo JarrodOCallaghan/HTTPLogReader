@@ -2,6 +2,7 @@ package ocallaghan.jarrod.httplogreader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -13,51 +14,32 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
+
+    private Map<String, Integer> ipAddresses = new HashMap<String, Integer>();
+    private Map<String, Integer> urlAccessed = new HashMap<String, Integer>();
     public static void main(String[] args){
-        Map<String, Integer> ipAddresses = new HashMap<String, Integer>();
-        Map<String, Integer> urlAccessed = new HashMap<String, Integer>();
 
-        // Lets store the top 3 items
-        try {
-            File file = new File("/Users/jarrod/Repositories/HTTPLogReader/SampleData/data.log");
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String data = scanner.nextLine();
-                LogEntry entry = new LogEntry();
-                entry.parseLogData(data);
+        // Process file and get log entries
+        String filePath = "/Users/jarrod/Repositories/HTTPLogReader/SampleData/data.log";
+        FileReader fr = new FileReader();
+        fr.readFile(filePath);
 
-                // Hashmap for ip addresses and occurrences
-                String ip = entry.getIP();
-                if (ipAddresses.containsKey(ip)){
-                    ipAddresses.put(ip, ipAddresses.get(ip) + 1);
-                } else {
-                    ipAddresses.put(ip, 1);
-                }
+        // Run the report
+        report(fr);
+    }
 
-                // Hashmap for URLs and occurrences
-                String url = entry.getRequestLine().split(" ", 3)[1];
-                if (urlAccessed.containsKey(url)){
-                    urlAccessed.put(url, urlAccessed.get(url) + 1);
-                } else {
-                    urlAccessed.put(url, 1);
-                }
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            // Goin to gracefully exit the program as we don't have anything to process
-            System.exit(0);
-        } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Unable to parse file, it may not be the correct format");
-            System.exit(0);
-        }
+    // Report could be broken down into its own class if needed, for now its fine if they are static with the main class
+    static public void report(FileReader fr){
+        System.out.println("Number of unique IP addresses: " + getUniqueIPCount(fr.getIPAddresses()));
+        System.out.println("Top 3 active IP addresses");
 
-        System.out.println("Unique IP Addresses: " + ipAddresses.size());
+        System.out.println("Top 3 visited URLs");
 
-        //Going to now 'flip' the ip list so it can be ordered
+
+
         SortedMap<Integer, HashSet<String>> sortedIPList = new TreeMap<>();
 
-        ipAddresses.forEach((ip, count) -> {
+        fr.getIPAddresses().forEach((ip, count) -> {
             if (sortedIPList.containsKey(count)){
                 sortedIPList.get(count).add(ip);
             } else {
@@ -82,7 +64,7 @@ public class App {
         // URL's
         SortedMap<Integer, HashSet<String>> sortedURLList = new TreeMap<>();
 
-        urlAccessed.forEach((url, count) -> {
+        fr.getUrlAddresses().forEach((url, count) -> {
             if (sortedURLList.containsKey(count)){
                 sortedURLList.get(count).add(url);
             } else {
@@ -102,10 +84,11 @@ public class App {
             reversedURLList.remove(reversedURLList.firstKey());
         }
 
+    }
 
-        
-
-
+    static public Integer getUniqueIPCount(Map<String, Integer> ipAddresses){
+        // Get size of unique IP Addresses
+        return ipAddresses.size();
     }
 
 }
