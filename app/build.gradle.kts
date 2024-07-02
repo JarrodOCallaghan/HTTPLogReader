@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    
 }
 
 repositories {
@@ -18,6 +19,9 @@ repositories {
 dependencies {
     // Use JUnit test framework.
     testImplementation(libs.junit)
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:3.+")
 
     // This dependency is used by the application.
     implementation(libs.guava)
@@ -33,4 +37,10 @@ java {
 application {
     // Define the main class for the application.
     mainClass = "ocallaghan.jarrod.httplogreader.App"
+}
+
+tasks.withType<Test> {
+    this.testLogging {
+        this.showStandardStreams = true
+    }
 }
