@@ -17,7 +17,7 @@ https://en.wikipedia.org/wiki/Common_Log_Format
 
 This project is using Gradle as its build tool
 
-## Building
+## Getting Started
 
 The project was build using Gradle.
 The Gradle install documentation can be found here: https://gradle.org/install/
@@ -36,6 +36,15 @@ An example of running then app against a file:
 gradle run --args=~/TestFile.txt
 ```
 
+Tests can be ran by using the following command:
+
+```
+gradle test
+```
+
+During some of the file handler tests, test files are being created in the project repo. It is worth checking that these are not left over after tests have been ran.
+As there are system exit calls throughout the project, if the project exits before manually, the @AfterClass doesn't seem to be called, and hence the files dont end up being deleted.
+The workaround for this is to reorder the tests so tests that don't hit a System exit call are ran last.
 
 ## Versioning
 
