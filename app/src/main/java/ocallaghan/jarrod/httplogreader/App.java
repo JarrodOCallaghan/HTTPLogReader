@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
-
-    private Map<String, Integer> ipAddresses = new HashMap<String, Integer>();
-    private Map<String, Integer> urlAccessed = new HashMap<String, Integer>();
     public static void main(String[] args){
 
         // Process file and get log entries
@@ -28,67 +25,69 @@ public class App {
         report(fr);
     }
 
-    // Report could be broken down into its own class if needed, for now its fine if they are static with the main class
     static public void report(FileReader fr){
         System.out.println("Number of unique IP addresses: " + getUniqueIPCount(fr.getIPAddresses()));
-        System.out.println("Top 3 active IP addresses");
-
-        System.out.println("Top 3 visited URLs");
-
-
-
-        SortedMap<Integer, HashSet<String>> sortedIPList = new TreeMap<>();
-
-        fr.getIPAddresses().forEach((ip, count) -> {
-            if (sortedIPList.containsKey(count)){
-                sortedIPList.get(count).add(ip);
-            } else {
-                HashSet<String> tmp = new HashSet<String>();
-                tmp.add(ip);
-                sortedIPList.put(count, tmp);
-            }
-        });
-
-        // Top 3 IP Addresses
-        SortedMap<Integer, HashSet<String>> reversedIPList = sortedIPList.reversed();
-        Integer reversedIPListLength = reversedIPList.size();
-        System.out.println(reversedIPListLength);
-        Integer topIPLen = (reversedIPListLength < 3) ? reversedIPListLength: 3;
-        System.out.println("The top " + topIPLen + " most active IP addresses by occurrence");
-        for (int i = 0; i < reversedIPListLength && i < 2 ; i ++){
-            System.out.println("Occurrences: " + reversedIPList.firstKey() + " - " + reversedIPList.get(reversedIPList.firstKey()));
-            reversedIPList.remove(reversedIPList.firstKey());
-        }
-
-
-        // URL's
-        SortedMap<Integer, HashSet<String>> sortedURLList = new TreeMap<>();
-
-        fr.getUrlAddresses().forEach((url, count) -> {
-            if (sortedURLList.containsKey(count)){
-                sortedURLList.get(count).add(url);
-            } else {
-                HashSet<String> tmp = new HashSet<String>();
-                tmp.add(url);
-                sortedURLList.put(count, tmp);
-            }
-        });
-
-        // Top 3 IP Addresses
-        SortedMap<Integer, HashSet<String>> reversedURLList = sortedURLList.reversed();
-        Integer reversedURLListLength = reversedURLList.size();
-        Integer topURLLen = (reversedURLListLength < 3) ? reversedURLListLength: 3;
-        System.out.println("The top " + topURLLen + " most visited URLs");
-        for (int i = 0; i < reversedURLListLength && i < 2 ; i ++){
-            System.out.println("Occurrences: " + reversedURLList.firstKey() + " - " + reversedURLList.get(reversedURLList.firstKey()));
-            reversedURLList.remove(reversedURLList.firstKey());
-        }
-
+        System.out.println(getTop3IpAddresses(fr.getIPAddresses()));
+        System.out.println(getTop3URLAccessed(fr.getUrlAddresses()));
     }
 
-    static public Integer getUniqueIPCount(Map<String, Integer> ipAddresses){
-        // Get size of unique IP Addresses
+    private static Integer getUniqueIPCount(Map<String, Integer> ipAddresses){
         return ipAddresses.size();
+    }
+
+    private static String getTop3IpAddresses(Map<String, Integer> ipAddresses){
+        SortedMap<Integer, HashSet<String>> sortedIPList = sortHashMapByValueReversed(ipAddresses);
+
+        String[] topIPs = Top3orNItemsFromMap(sortedIPList);
+        String formattedString = topIPs[0] + " most active IP addresses by occurrence";
+
+        for (int i = 1; i < topIPs.length; i ++){
+            formattedString += "\n" + topIPs[i];
+        }
+
+        return formattedString;
+    }
+
+    private static String getTop3URLAccessed(Map<String, Integer> urlAccessed){
+        SortedMap<Integer, HashSet<String>> sortedURLList = sortHashMapByValueReversed(urlAccessed);
+
+        String[] topUrls = Top3orNItemsFromMap(sortedURLList);
+        String formattedString = topUrls[0] + " most visited URLs";
+
+        for (int i = 1; i < topUrls.length; i ++){
+            formattedString += "\n" + topUrls[i];
+        }
+        return formattedString;
+    }
+
+    private static SortedMap<Integer, HashSet<String>> sortHashMapByValueReversed(Map<String, Integer> unsortedMap){
+        SortedMap<Integer, HashSet<String>> sortedMap = new TreeMap<>();
+
+        unsortedMap.forEach((k, v) -> {
+            if (sortedMap.containsKey(v)){
+                sortedMap.get(v).add(k);
+            } else {
+                HashSet<String> tmp = new HashSet<String>();
+                tmp.add(k);
+                sortedMap.put(v, tmp);
+            }
+        });
+
+        return sortedMap.reversed();
+    }
+
+    private static String[] Top3orNItemsFromMap(SortedMap<Integer, HashSet<String>> map){
+        Integer maxMapSize = (map.size() < 3) ? map.size(): 3;
+        String[] formattedString = new String[maxMapSize + 1];
+        formattedString[0] = "The top " + maxMapSize;
+
+        for (int i = 0; i < maxMapSize; i++){
+            String tmp =  map.firstKey() + " - " + map.get(map.firstKey()).toString();
+            formattedString[i+1] = tmp;
+            map.remove(map.firstKey());
+        }
+        
+        return formattedString;
     }
 
 }
